@@ -1,0 +1,56 @@
+_schema-version: '3.1'
+ID: north
+version: 1.0.0
+description: "A simple CAP project."
+parameters:
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - npx cds build --production
+modules:
+  - name: north-srv
+    type: nodejs
+    path: gen/srv
+    parameters:
+      buildpack: nodejs_buildpack
+    build-parameters:
+      builder: npm
+    provides:
+      - name: srv-api # required by consumers of CAP services (e.g. approuter)
+        properties:
+          srv-url: ${default-url}
+    requires:
+      - name: north-auth
+      - name: destination
+      - name: connectivity
+
+resources:
+  - name: north-auth
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: xsuaa
+      service-plan: application
+      path: ./xs-security.json
+      config:
+        xsappname: north-${org}-${space}
+        tenant-mode: dedicated
+
+  - name: destination
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: destination
+      service-keys:
+      - name: north-dest-key
+      service-name: north-dest
+      service-plan: lite
+
+  - name: connectivity
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: connectivity
+      service-keys:
+      - name: north-connectivity-key
+      service-name: north-connectivity
+      service-plan: lite

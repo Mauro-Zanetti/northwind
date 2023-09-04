@@ -1,0 +1,45 @@
+{
+  "name": "north",
+  "version": "1.0.0",
+  "description": "A simple CAP project.",
+  "repository": "<Add your repository here>",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@sap-cloud-sdk/http-client": "^3.4.0",
+    "@sap/cds": "^7",
+    "@sap/xssec": "^3",
+    "express": "^4",
+    "passport": "^0"
+  },
+  "devDependencies": {
+    "@cap-js/sqlite": "^1",
+    "@sap/cds-dk": "^7"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "deploy": "npm i && mbt build && cf deploy mta_archives/north_1.0.0.mtar --retries 1"
+  },
+  "cds": {
+    "requires": {
+      "[production]": {
+        "auth": "xsuaa"
+      },
+      "NorthWind": {
+        "kind": "odata",
+        "model": "srv/external/NorthWind",
+        "[development]": {
+          "credentials": {
+            "url": "https://services.odata.org/Experimental/OData/OData.svc"
+          }
+        },
+        "[production]": {
+          "credentials": {
+            "destination": "northwind",
+            "path": "/Experimental/OData/OData.svc"
+          }
+        }
+      }
+    }
+  }
+}
