@@ -38,6 +38,25 @@
             "destination": "northwind",
             "path": "/Experimental/OData/OData.svc"
           }
+        },
+        "[hybrid]": {
+          "binding": {
+            "type": "cf",
+            "apiEndpoint": "https://api.cf.us10-001.hana.ondemand.com",
+            "org": "9e4cad0etrial",
+            "space": "dev",
+            "instance": "north-dest",
+            "key": "north-dest-key",
+            "vcap": {
+              "label": "destination",
+              "plan": "lite"
+            },
+            "resolved": false
+          },
+          "credentials": {
+            "destination": "northwind",
+            "path": "/Experimental/OData/OData.svc"
+          }
         }
       }
     }
